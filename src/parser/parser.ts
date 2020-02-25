@@ -5,7 +5,7 @@ import {
   parseExpressionAt as acornParseAt,
   Position
 } from 'acorn'
-import { parse as acornLooseParse } from 'acorn-loose'
+import { parse as acornParseLoose } from 'acorn-loose'
 import { ancestor, AncestorWalkerFn } from 'acorn-walk/dist/walk'
 import * as es from 'estree'
 import { Context, ErrorSeverity, ErrorType, Rule, SourceError } from '../types'
@@ -152,7 +152,7 @@ export function parseLoose(source: string, context: Context) {
   } catch {
     try {
       // Fallback to loose parser
-      return (acornLooseParse(source, options) as unknown) as es.Program
+      return (acornParseLoose(source, options) as unknown) as es.Program
     } catch {
       // We don't actually care about the errors
       return undefined
