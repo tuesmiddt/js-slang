@@ -5,6 +5,7 @@ import {
   parseExpressionAt as acornParseAt,
   Position
 } from 'acorn'
+import { parse as acornParseLoose } from 'acorn-loose'
 import { ancestor, AncestorWalker } from 'acorn-walk/dist/walk'
 import * as es from 'estree'
 import rules from './rules'
@@ -130,6 +131,30 @@ export function parse(source: string, context: Context) {
     return program
   } else {
     return undefined
+  }
+}
+
+export function parseLoose(source: string, context: Context) {
+  // We want to use the normal parser for programs that violate source rules but
+  // are valid js since the loose parser may give wrong results for poorly
+  // indented code.
+  const options: AcornOptions = {
+    sourceType: 'module',
+    ecmaVersion: 6,
+    locations: true
+  }
+
+  try {
+    // Always try the normal parser first as instructed by acorn parser docs.
+    return (acornParse(source, options) as unknown) as es.Program
+  } catch {
+    try {
+      // Fallback to loose parser
+      return (acornParseLoose(source, options) as unknown) as es.Program
+    } catch {
+      // We don't actually care about the errors
+      return undefined
+    }
   }
 }
 
