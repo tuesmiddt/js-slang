@@ -11,6 +11,7 @@ import {
   RuntimeSourceError,
   UndefinedVariable
 } from './interpreter-errors'
+import { traverseProgram } from './names'
 import { parse, parseAt, parseLoose } from './parser'
 import { AsyncScheduler, PreemptiveScheduler } from './schedulers'
 import { areBreakpointsSet, setBreakpointAtLine } from './stdlib/inspector'
@@ -158,6 +159,12 @@ export async function getNames(
   }
 
   console.log(program)
+  const cursor_location = {
+    line: 6,
+    column: 3,
+  }
+  const names: string[] = []
+  console.log(traverseProgram(program, cursor_location, names))
 
   return generate(program)
 }
