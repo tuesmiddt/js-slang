@@ -208,6 +208,12 @@ export async function getNames(
   }
 
   console.log(program)
+  const cursor_location = {
+    line: 6,
+    column: 3,
+  }
+  const names: string[] = []
+  console.log(traverseProgram(program, cursor_location, names))
 
   return generate(program)
 }
