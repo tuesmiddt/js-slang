@@ -31,6 +31,7 @@ import {
 } from './types'
 import { locationDummyNode } from './utils/astCreator'
 import { validateAndAnnotate } from './validator/validator'
+export { SourceDocumentation } from './editors/ace/docTooltip'
 
 import { generate } from 'escodegen'
 
