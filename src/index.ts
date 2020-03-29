@@ -12,7 +12,7 @@ import {
 import { RuntimeSourceError } from './errors/runtimeSourceError'
 import { findDeclarationNode, findIdentifierNode } from './finder'
 import { evaluate } from './interpreter/interpreter'
-import { parse, parseAt, parseLoose } from './parser/parser'
+import { parse, parseAt } from './parser/parser'
 import { AsyncScheduler, PreemptiveScheduler } from './schedulers'
 import { getAllOccurrencesInScopeHelper } from './scope-refactoring'
 import { areBreakpointsSet, setBreakpointAtLine } from './stdlib/inspector'
@@ -196,7 +196,7 @@ export function getAllOccurrencesInScope(
 }
 
 export async function getNames(code: string, line: number, col: number): Promise<any> {
-  const program = parseLoose(code)
+  const program = parse(code, createContext(), true)
 
   if (!program) {
     return []
