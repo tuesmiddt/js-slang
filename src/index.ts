@@ -32,8 +32,7 @@ import {
 import { locationDummyNode } from './utils/astCreator'
 import { validateAndAnnotate } from './validator/validator'
 export { SourceDocumentation } from './editors/ace/docTooltip'
-
-import { generate } from 'escodegen'
+import { getProgramNames } from './name-extractor'
 
 export interface IOptions {
   scheduler: 'preemptive' | 'async'
@@ -196,26 +195,14 @@ export function getAllOccurrencesInScope(
   return getAllOccurrencesInScopeHelper(declarationNode.loc, program, identifierNode.name)
 }
 
-export async function getNames(
-  code: string,
-  context: Context,
-  options: Partial<IOptions> = {}
-): Promise<any> {
-  const program = parseLoose(code, context)
+export async function getNames(code: string, line: number, col: number): Promise<any> {
+  const program = parseLoose(code)
 
   if (!program) {
-    return ''
+    return []
   }
 
-  console.log(program)
-  const cursor_location = {
-    line: 6,
-    column: 3,
-  }
-  const names: string[] = []
-  console.log(traverseProgram(program, cursor_location, names))
-
-  return generate(program)
+  return getProgramNames(program, { line, column: col })
 }
 
 export async function runInContext(

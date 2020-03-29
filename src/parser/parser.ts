@@ -136,7 +136,7 @@ export function parse(source: string, context: Context, fallbackToLooseParse: bo
   }
 }
 
-export function parseLoose(source: string, context: Context) {
+export function parseLoose(source: string) {
   // We want to use the normal parser for programs that violate source rules but
   // are valid js since the loose parser may give wrong results for poorly
   // indented code.
