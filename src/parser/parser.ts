@@ -185,7 +185,7 @@ const createAcornParserOptions = (context: Context): AcornOptions => ({
 })
 
 export function looseParse(source: string, context: Context) {
-  const program = (acornLooseParse(
+  const program = (acornParseLoose(
     source,
     createAcornParserOptions(context)
   ) as unknown) as es.Program
