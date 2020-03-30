@@ -125,19 +125,23 @@ function theme(acequire, exports, module) {
                         iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbY\
                         nAAAAEklEQVQImWNgYGBgYHCLSvkPAAP3AgSDTRd4AAAAAElFTkSuQmCC) right repeat-y\
                         }\
-                        .ace_editor.ace_autocomplete {\
+                        .ace_dark.ace-source.ace_editor.ace_autocomplete {\
                         background-color: #2c3e50;\
                         border-color: #555555;\
                         color: white;\
                         }\
-                        .ace_editor.ace_autocomplete .ace_completion-highlight {\
+                        .ace_dark.ace-source.ace_editor.ace_autocomplete .ace_completion-highlight {\
                         color: #FF9D00;\
                         }\
-                        .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {\
+                        .ace_dark.ace-source.ace_editor.ace_autocomplete .ace_content .ace_marker-layer .ace_active-line {\
                         border-color: #555555;\
                         background-color: #495a6b;\
                         }\
-                        .ace_editor.ace_autocomplete .ace_text-layer .ace_rightAlignedText {\
+                        .ace_dark.ace-source.ace_editor.ace_autocomplete .ace_content .ace_marker-layer .ace_line-hover {\
+                        border-color: #555555;\
+                        background-color: #6b839a;\
+                        }\
+                        .ace_dark.ace-source.ace_editor.ace_autocomplete .ace_content.ace_text-layer .ace_rightAlignedText {\
                         color: #ced9e0;\
                         }\
                         .ace_tooltip.ace_doc-tooltip {\
