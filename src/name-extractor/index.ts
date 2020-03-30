@@ -5,7 +5,7 @@ interface NameDeclaration {
   meta: string
 }
 
-const KIND_FUNCTION = 'function'
+const KIND_FUNCTION = 'func'
 const KIND_LET = 'let'
 
 function isDeclaration(node: es.Node): boolean {
@@ -62,8 +62,7 @@ export function getProgramNames(prog: es.Node, cursorLoc: es.Position) {
   const res: any = {}
   nameQueue
     .map(node => getNames(node, (n: es.Node) => !inNode(n.loc)))
-    .reduce((prev, cur) => prev.concat(cur))
-    .filter(decl => !isDummyName(decl.name))
+    .reduce((prev, cur) => prev.concat(cur)) // no flatmap feelsbad
     .forEach(decl => {
       res[decl.name] = decl
     }) // Deduplicate, ensure deeper declarations overwrite
@@ -137,16 +136,22 @@ function getNodeChildren(node: es.Node): es.Node[] {
 function getNames(node: es.Node, test: (node: es.Node) => boolean): NameDeclaration[] {
   switch (node.type) {
     case 'VariableDeclaration':
-      return node.declarations
-        .map(variable => variable.id)
-        .filter(test)
-        .map(id => (id as es.Identifier).name)
-        .filter((name: string | undefined) => name !== undefined)
-        .map((name: string) => ({ name, meta: node.kind }))
+      const delcarations: NameDeclaration[] = []
+      for (const decl of node.declarations) {
+        const id = decl.id
+        const name = (id as es.Identifier).name
+        if (!test(id) || !name || isDummyName(name)) {
+          continue
+        }
+        delcarations.push({ name, meta: node.kind })
+      }
+      return delcarations
     case 'FunctionDeclaration':
-      return node.id && test(node.id) ? [{ name: node.id.name, meta: KIND_FUNCTION }] : []
+      return node.id && test(node.id) && !isDummyName(node.id.name)
+        ? [{ name: node.id.name, meta: KIND_FUNCTION }]
+        : []
     case 'Identifier':
-      return test(node) ? [{ name: node.name, meta: KIND_LET }] : []
+      return test(node) && !isDummyName(node.name) ? [{ name: node.name, meta: KIND_LET }] : []
     default:
       return []
   }
