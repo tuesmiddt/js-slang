@@ -3,7 +3,7 @@ import { getNames } from '../../index'
 import { NameDeclaration } from '../index'
 
 test('Test empty program does not generate names', async () => {
-  const code: string = "f"
+  const code: string = 'f'
   const line = 1
   const col = 1
   const extractedNames = await getNames(code, line, col)
@@ -102,7 +102,8 @@ test('Test that names in larger scope are extracted', async () => {
 })
 
 test('Test nested global scope', async () => {
-  const code: string = '\
+  const code: string =
+    '\
     let bar = 1;\n\
     function foo1() {\n\
       function foo2() {\n\
@@ -114,14 +115,20 @@ test('Test nested global scope', async () => {
   const line = 5
   const col = 2
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] = [ { name: 'foo1', meta: 'func' }, { name: 'foo2', meta: 'func' }, { name: 'foo3', meta: 'func' }, {name: 'bar', meta: 'let'}]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'foo1', meta: 'func' },
+    { name: 'foo2', meta: 'func' },
+    { name: 'foo3', meta: 'func' },
+    { name: 'bar', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
 // Function declarations
 
 test('Test that local and global variables are available in function declaration', async () => {
-  const code: string = '\
+  const code: string =
+    '\
     let bar1 = 1;\n\
     function foo1(){\n\
       let bar2 = 2;\n\
@@ -131,8 +138,11 @@ test('Test that local and global variables are available in function declaration
   const line = 4
   const col = 15
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] =
-  [{name: 'foo1', meta:'func'}, {name: 'bar2', meta:'let'}, {name: 'bar1', meta:'let'}]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'foo1', meta: 'func' },
+    { name: 'bar2', meta: 'let' },
+    { name: 'bar1', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
@@ -170,7 +180,10 @@ test('Test accessing local block in for-loop parameter', async () => {
   const line = 3
   const col = 6
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] = [{ name: 'baz', meta: 'let' }, { name: 'bar', meta: 'let' }]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'baz', meta: 'let' },
+    { name: 'bar', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
@@ -212,7 +225,10 @@ test('Test accessing local block in while-loop parameter', async () => {
   const line = 3
   const col = 6
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] = [{ name: 'baz', meta: 'let' }, { name: 'bar', meta: 'let' }]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'baz', meta: 'let' },
+    { name: 'bar', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
@@ -241,7 +257,10 @@ test('Test accessing local block in if-else parameter', async () => {
   const line = 3
   const col = 5
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] = [{ name: 'baz', meta: 'let' }, { name: 'bar', meta: 'let' }]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'baz', meta: 'let' },
+    { name: 'bar', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
@@ -261,7 +280,8 @@ test('Test that local variable in if-block cannot be accessed in else-block', as
 })
 
 test('Test that variable in if- and else- cannot be accessed outside either block', async () => {
-  const code: string = '\
+  const code: string =
+    '\
     if (true) {\n\
       let foo = 2;\n\
     } else {\n\
@@ -277,7 +297,8 @@ test('Test that variable in if- and else- cannot be accessed outside either bloc
 })
 
 test('Test that variable in if cannot be accessed outside if-statement', async () => {
-  const code: string = '\
+  const code: string =
+    '\
     function foo(baz) {\n\
       if (baz) {\n\
         let bar = 1;\n\
@@ -288,15 +309,17 @@ test('Test that variable in if cannot be accessed outside if-statement', async (
   const line = 5
   const col = 2
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] = [{ name: 'foo', meta: 'func' }, {name: 'baz', meta: 'let'}]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'foo', meta: 'func' },
+    { name: 'baz', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
 // Blocks
 
 test('Test that declaration in blocks cannot be accessed outside block', async () => {
-  const code: string =
-    '\
+  const code: string = '\
     {\n\
       let foo = 1;\n\
     }\n\
@@ -304,15 +327,13 @@ test('Test that declaration in blocks cannot be accessed outside block', async (
   '
   const line = 4
   const col = 1
-  const expectedNames: NameDeclaration[] = [
-  ]
+  const expectedNames: NameDeclaration[] = []
   const extractedNames = await getNames(code, line, col)
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
 test('Test that declaration outside blocks can be accessed inside block', async () => {
-  const code: string =
-    '\
+  const code: string = '\
     let bar = 1;\n\
     {\n\
       let baz = 1;\n\
@@ -322,8 +343,8 @@ test('Test that declaration outside blocks can be accessed inside block', async 
   const line = 4
   const col = 2
   const expectedNames: NameDeclaration[] = [
-    {name: 'baz', meta: 'let'},
-    {name: 'bar', meta: 'let'}
+    { name: 'baz', meta: 'let' },
+    { name: 'bar', meta: 'let' }
   ]
   const extractedNames = await getNames(code, line, col)
   expect(extractedNames).toMatchObject(expectedNames)
@@ -343,9 +364,9 @@ test('Test that declaration outside of anonymous functions can be accessed insid
   const line = 4
   const col = 1
   const expectedNames: NameDeclaration[] = [
-    {name: 'bar', meta: 'let'},
-    {name: 'foo', meta: 'let'},
-    {name: 'baz', meta: 'let'}
+    { name: 'bar', meta: 'let' },
+    { name: 'foo', meta: 'let' },
+    { name: 'baz', meta: 'let' }
   ]
   const extractedNames = await getNames(code, line, col)
   expect(extractedNames).toMatchObject(expectedNames)
@@ -362,19 +383,17 @@ test('Test that declaration inside anonymous functions can be accessed in body',
   const line = 3
   const col = 2
   const expectedNames: NameDeclaration[] = [
-    {name: 'foo', meta: 'let'},
-    {name: 'bar1', meta: 'let'},
-    {name: 'bar2', meta: 'let'},
-    {name: 'baz', meta: 'let'}
+    { name: 'foo', meta: 'let' },
+    { name: 'bar1', meta: 'let' },
+    { name: 'bar2', meta: 'let' },
+    { name: 'baz', meta: 'let' }
   ]
   const extractedNames = await getNames(code, line, col)
   expect(extractedNames).toMatchObject(expectedNames)
 })
 
-
 test('Test that declaration inside anonymous functions cannot be accessed outside', async () => {
-  const code: string =
-    '\
+  const code: string = '\
     let foo = (bar1, bar2) => { \n\
       let baz = 1;\n\
     }\n\
@@ -382,9 +401,7 @@ test('Test that declaration inside anonymous functions cannot be accessed outsid
   '
   const line = 4
   const col = 1
-  const expectedNames: NameDeclaration[] = [
-    {name: 'foo', meta: 'let'}
-  ]
+  const expectedNames: NameDeclaration[] = [{ name: 'foo', meta: 'let' }]
   const extractedNames = await getNames(code, line, col)
   expect(extractedNames).toMatchObject(expectedNames)
 })
@@ -392,7 +409,8 @@ test('Test that declaration inside anonymous functions cannot be accessed outsid
 // Return statements
 
 test('Test that local and global variables are available in return statements', async () => {
-  const code: string = '\
+  const code: string =
+    '\
     let bar1 = 1;\n\
     function foo1(){\n\
       let bar2 = 2;\n\
@@ -402,7 +420,10 @@ test('Test that local and global variables are available in return statements', 
   const line = 4
   const col = 7
   const extractedNames = await getNames(code, line, col)
-  const expectedNames: NameDeclaration[] =
-  [{name: 'foo1', meta:'func'}, {name: 'bar2', meta:'let'}, {name: 'bar1', meta:'let'}]
+  const expectedNames: NameDeclaration[] = [
+    { name: 'foo1', meta: 'func' },
+    { name: 'bar2', meta: 'let' },
+    { name: 'bar1', meta: 'let' }
+  ]
   expect(extractedNames).toMatchObject(expectedNames)
 })
